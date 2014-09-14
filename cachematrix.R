@@ -5,18 +5,20 @@
 ## ability to cache results of operations
 
 CachedOpsMatrix <- setRefClass("CachedOpsMatrix",
-	fields = list(
-		value = "matrix", 
-		inverse = function(){
-			if(is.null(my.inverse)) 
-				my.inverse <<- solve(value)
-			else message("getting cached data")
-			my.inverse
-		}),
+	fields = list(value = "matrix" ),
+
 	methods = list(
 		initialize = function(...){
 			my.inverse <<- NULL
 			callSuper(...)
+		},
+
+		getInverse = function(){
+			"Calculating inverse of matrix. Once it was calculated result is cached and returned in any consecutive call"
+			if(is.null(my.inverse)) 
+				my.inverse <<- solve(value)
+			else message("getting cached data")
+			my.inverse
 		})
 	)
 
@@ -32,5 +34,5 @@ makeCacheMatrix <- function(x = matrix()) {
 ## and returned in any consecutive call
 
 cacheSolve <- function(x, ...) {
-	x$inverse
+	x$getInverse()
 }
