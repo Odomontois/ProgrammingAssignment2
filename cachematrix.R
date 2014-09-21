@@ -14,9 +14,9 @@ CachedOps <- setRefClass("CachedOps",
 
   methods = list(
     initialize = function(...,func){
-    cache <<- NULL
-    func <<- function() func(...)
-    callSuper()
+      cache <<- NULL
+      func <<- function() func(...)
+      callSuper()
     },
 
     getResult = function(){
