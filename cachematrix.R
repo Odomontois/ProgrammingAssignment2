@@ -4,23 +4,21 @@
 # mci <- makeCacheMatrix({message("calculating");solve(m)})
 # cacheSolve(mci)
 # cacheSolve(mci) # should not print message again, should insted inform about cache use 
-# mcs <- makeCacheMatrix(solve(m,c(1,1))
+# mcs <- makeCacheMatrix(m, c(1,1))
 # cacheSolve(mcs)
 
 # Class for creating matrices with 
 # ability to cache results of operations
-# see CacheOps$help(getResult)
 CachedOps <- setRefClass("CachedOps",
-	fields = list(result = "function", cached = "logical"),
+	fields = list( func = "function", cache = "ANY"),
 
 	methods = list(
-		initialize = function(expr,...){
-			cached <<- FALSE
-			result <<- function(){
-				cached <<- TRUE
-				expr
-			}
-			callSuper(...)
+		initialize = function(...,func){
+			cache <<- NULL
+      func <<- function(){
+        func(...)
+      }
+			callSuper()
 		},
 
 		getResult = function(){
@@ -31,17 +29,17 @@ Once it was calculated result is cached and returned in any consecutive call"
 		})
 	)
 
-makeCacheMatrix <- function(expr,...) {
-	# Creating new caching object
-	# Args:
-	#   func - function, result of calculation is need to cache
-	#   ... - parameters for function calling
-	CachedOps$new(expr,...)
+makeCacheMatrix <- function(..., func = solve) {
+  # Creating new caching object
+  # Args:
+  #   func - function, result of calculation is need to cache
+  #   ... - parameters for function calling
+	CachedOps$new(..., func = func)
 }
 
-cacheSolve <- function(x) {
-	# Calculating result of function on matrix
-	# once it was calculated result is cached
-	# and returned in any consecutive call
+cacheSolve <- function(x, ...) {
+  # Calculating result of function on matrix
+  # once it was calculated result is cached
+  # and returned in any consecutive call
 	x$getResult()
 }
