@@ -1,10 +1,10 @@
 ## Creating a special object for caching calculations
 # example:
 # m <- matrix(1:4,c(2,2))
-# mci <- makeCacheMatrix(m, func = function(m){message("calculating");solve(m)})
+# mci <- makeCacheMatrix({message("calculating");solve(m)})
 # cacheSolve(mci)
 # cacheSolve(mci) # should not print message again, should insted inform about cache use 
-# mcs <- makeCacheMatrix(m, c(1,1), tol = .001)
+# mcs <- makeCacheMatrix(solve(m,c(1,1))
 # cacheSolve(mcs)
 
 # Class for creating matrices with 
@@ -19,7 +19,7 @@ CachedOps <- setRefClass("CachedOps",
       func <<- function(){
         expr
       }
-			callSuper()
+			callSuper(...)
 		},
 
 		getResult = function(){
