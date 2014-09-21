@@ -1,47 +1,38 @@
-## Creating a special object for caching calculations
-# example:
-# m <- matrix(1:4,c(2,2))
-# mci <- makeCacheMatrix({message("calculating");solve(m)})
-# cacheSolve(mci)
-# cacheSolve(mci) # should not print message again, should insted inform about cache use 
-# mcs <- makeCacheMatrix(solve(m,c(1,1))
-# cacheSolve(mcs)
+## Creating a special object for calculating properties of matrix
+## e.g. inverse with caching options
 
-# Class for creating matrices with 
-# ability to cache results of operations
-# see CacheOps$help(getResult)
-CachedOps <- setRefClass("CachedOps",
-	fields = list(result = "function", cached = "logical"),
+## Class for creating matrices with 
+## ability to cache results of operations
+
+CachedOpsMatrix <- setRefClass("CachedOpsMatrix",
+	fields = list(value = "matrix" ),
 
 	methods = list(
-		initialize = function(expr,...){
-			cached <<- FALSE
-			result <<- function(){
-				cached <<- TRUE
-				expr
-			}
+		initialize = function(...){
+			my.inverse <<- NULL
 			callSuper(...)
 		},
 
-		getResult = function(){
-			"Calculating result of operation on matrix. 
-Once it was calculated result is cached and returned in any consecutive call"
-			if(cached) message("getting cached data")
-			result()
+		getInverse = function(){
+			"Calculating inverse of matrix. Once it was calculated result is cached and returned in any consecutive call"
+			if(is.null(my.inverse)) 
+				my.inverse <<- solve(value)
+			else message("getting cached data")
+			my.inverse
 		})
 	)
 
-makeCacheMatrix <- function(expr,...) {
-	# Creating new caching object
-	# Args:
-	#   func - function, result of calculation is need to cache
-	#   ... - parameters for function calling
-	CachedOps$new(expr,...)
+## Creating new caching object
+
+makeCacheMatrix <- function(x = matrix()) {
+	CachedOpsMatrix$new(value = x)
 }
 
-cacheSolve <- function(x) {
-	# Calculating result of function on matrix
-	# once it was calculated result is cached
-	# and returned in any consecutive call
-	x$getResult()
+
+## Calculating inverse of matrix
+## once it was calculated result is cached
+## and returned in any consecutive call
+
+cacheSolve <- function(x, ...) {
+	x$getInverse()
 }
