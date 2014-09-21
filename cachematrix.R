@@ -11,12 +11,13 @@
 # ability to cache results of operations
 # see CacheOps$help(getResult)
 CachedOps <- setRefClass("CachedOps",
-	fields = list(func = "function", cache = "ANY"),
+	fields = list(result = "function", cached = "logical"),
 
 	methods = list(
 		initialize = function(expr,...){
-			cache <<- NULL
-      func <<- function(){
+      cached <<- FALSE
+      result <<- function(){
+        cached <<- TRUE
         expr
       }
 			callSuper(...)
@@ -25,10 +26,8 @@ CachedOps <- setRefClass("CachedOps",
 		getResult = function(){
 			"Calculating result of operation on matrix. 
 Once it was calculated result is cached and returned in any consecutive call"
-			if(is.null(cache)) 
-				cache <<- func()
-			else message("getting cached data")
-			cache
+      if(cached) message("getting cached data")
+			result()
 		})
 	)
 
