@@ -10,36 +10,38 @@
 # Class for creating matrices with 
 # ability to cache results of operations
 CachedOps <- setRefClass("CachedOps",
-	fields = list( func = "function", cache = "ANY"),
+  fields = list( func = "function", cache = "ANY"),
 
-	methods = list(
-		initialize = function(...,func){
-			cache <<- NULL
-			func <<- function(){
-				func(...)
-			}
-			callSuper()
-		},
+  methods = list(
+    initialize = function(...,func){
+    cache <<- NULL
+    func <<- function() func(...)
+    callSuper()
+    },
 
-		getResult = function(){
-			"Calculating result of operation on matrix. 
+    getResult = function(){
+      "Calculating result of operation on matrix. 
 Once it was calculated result is cached and returned in any consecutive call"
-			if(cached) message("getting cached data")
-			result()
-		})
-	)
+      if(is.null(cache)) {
+        cache <<- func()
+      }else{
+        message("getting cached data")
+      }
+      cache
+    })
+  )
 
 makeCacheMatrix <- function(..., func = solve) {
-	# Creating new caching object
-	# Args:
-	#   func - function, result of calculation is need to cache
-	#   ... - parameters for function calling
-	CachedOps$new(..., func = func)
+  # Creating new caching object
+  # Args:
+  #   func - function, result of calculation is need to cache
+  #   ... - parameters for function calling
+  CachedOps$new(..., func = func)
 }
 
 cacheSolve <- function(x, ...) {
-	# Calculating result of function on matrix
-	# once it was calculated result is cached
-	# and returned in any consecutive call
-	x$getResult()
+  # Calculating result of function on matrix
+  # once it was calculated result is cached
+  # and returned in any consecutive call
+  x$getResult()
 }
