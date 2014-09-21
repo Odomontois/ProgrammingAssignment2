@@ -15,33 +15,33 @@ CachedOps <- setRefClass("CachedOps",
 
 	methods = list(
 		initialize = function(expr,...){
-      cached <<- FALSE
-      result <<- function(){
-        cached <<- TRUE
-        expr
-      }
+			cached <<- FALSE
+			result <<- function(){
+				cached <<- TRUE
+				expr
+			}
 			callSuper(...)
 		},
 
 		getResult = function(){
 			"Calculating result of operation on matrix. 
 Once it was calculated result is cached and returned in any consecutive call"
-      if(cached) message("getting cached data")
+			if(cached) message("getting cached data")
 			result()
 		})
 	)
 
 makeCacheMatrix <- function(expr,...) {
-  # Creating new caching object
-  # Args:
-  #   func - function, result of calculation is need to cache
-  #   ... - parameters for function calling
+	# Creating new caching object
+	# Args:
+	#   func - function, result of calculation is need to cache
+	#   ... - parameters for function calling
 	CachedOps$new(expr,...)
 }
 
 cacheSolve <- function(x) {
-  # Calculating result of function on matrix
-  # once it was calculated result is cached
-  # and returned in any consecutive call
+	# Calculating result of function on matrix
+	# once it was calculated result is cached
+	# and returned in any consecutive call
 	x$getResult()
 }
